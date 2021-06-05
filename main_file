@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace read_from_file
+{
+    class Node 
+    {
+    private string Nodename;
+    private string destination_Node;
+    private Node next_node;
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            StreamReader txt1 = new StreamReader(@"C:\Users\Mostafa\Desktop\test.txt");
+            string line = txt1.ReadLine();
+            UInt64 i = 0, j = 0;
+            UInt64 number_source;
+            UInt64 number_destination;
+            int[] number_page_by_IN_degree_i = new int[53940];
+            int[] number_page_by_OUT_degree_i = new int[53940];
+           const UInt64  array_lenth_node=1000000;
+           UInt64[] source = new UInt64[array_lenth_node];
+           UInt64[] destination = new UInt64[array_lenth_node];
+            string[] save_line=new string[2];
+                while (line != null)
+                {
+                    save_line = line.Split(' ');
+                   number_source = Convert.ToUInt64(save_line[0]);
+                   number_destination= Convert.ToUInt64(save_line[1]);
+                  source[number_source]++;
+                  destination[number_destination]++;
+                    j = 0;
+                    line = txt1.ReadLine();
+                }
+            /////////////////////////////////////////////////////////////////////////////////////////
+                for (UInt64 by_i_IN_degree = 0; by_i_IN_degree < 2311; ++by_i_IN_degree)////////////تعداد صفحات با در جه ی ورودی iرا می شمارد
+                    for (UInt64 node_i = 1; node_i < 997462; ++node_i)/////////////////////////////
+                        if (source[node_i]==by_i_IN_degree)///////////////////////////////////////
+                        number_page_by_IN_degree_i[by_i_IN_degree]++;////////////////////////////
+                for (UInt64 by_i_OUT_degree = 0; by_i_OUT_degree < 53940; ++by_i_OUT_degree)////
+                    for (UInt64 node_i = 1; node_i < 997462; ++node_i)/////////////////////////
+                        if (destination[node_i]==by_i_OUT_degree)/////////////////////////////
+                        number_page_by_OUT_degree_i[by_i_OUT_degree]++;//////////////////////تعداد صفحات با در جه ی ورودی jرا می شمارد
+            ////////////////////////////////////////////////////////////////////////////////
+                StreamWriter textout_deg_in_out_ans = new StreamWriter(@"C:\Users\Mostafa\Desktop\main_folder_project\int_ext_node.txt", false);
+                StreamWriter textout_number_pages_by_i_degree_In = new StreamWriter(@"C:\Users\Mostafa\Desktop\main_folder_project\number_pages_by_i_degree_In.txt", false);
+                StreamWriter textout_number_pages_by_i_degree_Out = new StreamWriter(@"C:\Users\Mostafa\Desktop\main_folder_project\number_pages_by_i_degree_Out.txt", false);
+                for (int counter = 0; counter < 53940;++counter ) 
+                {
+                    textout_number_pages_by_i_degree_In.WriteLine("{0} {1}", counter, number_page_by_IN_degree_i[counter]);
+                    textout_number_pages_by_i_degree_Out.WriteLine("{0} {1}", counter, number_page_by_OUT_degree_i[counter]);
+                }
+                textout_number_pages_by_i_degree_In.Close();
+                textout_number_pages_by_i_degree_Out.Close();
+                for (UInt64 i_source = 0; i_source <= 997462; ++i_source)
+                    if (source[i_source] != 0 || destination[i_source] != 0)
+                        textout_deg_in_out_ans.WriteLine("{0} {1} {2}", i_source, source[i_source], destination[i_source]);
+                textout_deg_in_out_ans.Close();
+                
+        }
+    }
+}
